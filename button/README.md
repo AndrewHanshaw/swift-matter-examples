@@ -12,7 +12,7 @@ Breakdown of the files included:
   - **main/BridgingHeader.h** — A bridging header that imports C and C++ declarations from ESP IDF and ESP Matter SDKs into Swift.
   - **main/CmakeLists.txt** — CMake configuration describing what files to build and how. This includes a lot of Embedded Swift specific logic (e.g. Swift compiler flags).
   - **main/idf_component.yml** — Dependency list for the IDF Component Manager. Same as the ["light" example from the ESP Matter SDK](https://github.com/espressif/esp-matter/tree/main/examples/light).
-  - **main/LED.swift** — Implementation of a helper "LED" object in Embedded Swift.
+  - **main/Switch.swift** — Implementation of a helper "Switch" object in Embedded Swift.
   - **main/Main.swift** — Main file with Embedded Swift application source code.
 - **Matter/** — Subdirectory with a simple (incomplete) Matter overlay to bridge C++ Matter APIs into Swift
   - **Matter/Attribute.swift** — Low-level overlay code for Matter attributes.

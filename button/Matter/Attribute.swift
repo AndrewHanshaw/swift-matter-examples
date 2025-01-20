@@ -47,38 +47,6 @@ protocol MatterAttributeID: RawRepresentable where RawValue == UInt32 {
   associatedtype Attribute: MatterAttribute
 }
 
-extension LevelControl {
-  struct CurrentLevel: MatterAttribute {
-    var attribute: UnsafeMutablePointer<esp_matter.attribute_t>
-  }
-}
-
-extension ColorControl {
-  struct CurrentHue: MatterAttribute {
-    var attribute: UnsafeMutablePointer<esp_matter.attribute_t>
-  }
-
-  struct CurrentSaturation: MatterAttribute {
-    var attribute: UnsafeMutablePointer<esp_matter.attribute_t>
-  }
-
-  struct CurrentX: MatterAttribute {
-    var attribute: UnsafeMutablePointer<esp_matter.attribute_t>
-  }
-
-  struct CurrentY: MatterAttribute {
-    var attribute: UnsafeMutablePointer<esp_matter.attribute_t>
-  }
-
-  struct ColorTemperatureMireds: MatterAttribute {
-    var attribute: UnsafeMutablePointer<esp_matter.attribute_t>
-  }
-
-  struct ColorMode: MatterAttribute {
-    var attribute: UnsafeMutablePointer<esp_matter.attribute_t>
-  }
-}
-
 extension OnOff {
   struct OnOffState: MatterAttribute {
     var attribute: UnsafeMutablePointer<esp_matter.attribute_t>

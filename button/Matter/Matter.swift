@@ -70,52 +70,14 @@ extension Matter {
 
     var eventHandler: ((Event) -> Void)? = nil
 
-    enum ColorControlAttribute {
-      case currentHue
-      case currentSaturation
-      case currentX
-      case currentY
-      case colorTemperatureMireds
-      case colorMode
-    }
-
     enum Attribute {
       case onOff
-      case levelControl
-      case colorControl(ColorControlAttribute)
       case unknown(UInt32)
 
       init?(cluster: Cluster, attribute: UInt32) {
         if let _ = cluster.as(OnOff.self) {
           switch attribute {
           case OnOff.AttributeID<OnOff.OnOffState>.state.rawValue: self = .onOff
-          default: return nil
-          }
-        } else if let _ = cluster.as(LevelControl.self) {
-          switch attribute {
-          case LevelControl.AttributeID<LevelControl.CurrentLevel>.currentLevel
-            .rawValue:
-            self = .levelControl
-          default: return nil
-          }
-        } else if let _ = cluster.as(ColorControl.self) {
-          switch attribute {
-          case ColorControl.AttributeID<ColorControl.CurrentHue>.currentHue
-            .rawValue:
-            self = .colorControl(.currentHue)
-          case ColorControl.AttributeID<ColorControl.CurrentSaturation>
-            .currentSaturation.rawValue:
-            self = .colorControl(.currentSaturation)
-          case ColorControl.AttributeID<ColorControl.CurrentX>.currentX.rawValue:
-            self = .colorControl(.currentX)
-          case ColorControl.AttributeID<ColorControl.CurrentY>.currentY.rawValue:
-            self = .colorControl(.currentY)
-          case ColorControl.AttributeID<ColorControl.ColorTemperatureMireds>
-            .colorTemperatureMireds.rawValue:
-            self = .colorControl(.colorTemperatureMireds)
-          case ColorControl.AttributeID<ColorControl.ColorMode>.colorMode
-            .rawValue:
-            self = .colorControl(.colorMode)
           default: return nil
           }
         } else {
@@ -132,29 +94,17 @@ extension Matter {
   }
 }
 
+// Set up the endpoint. Endpoint parameters from esp-matter/components/esp_matter/esp_matter_endpoint.cpp
 extension Matter {
-  class ExtendedColorLight: Endpoint {
+  class OnOffSwitch: Endpoint {
     override init(node: Node) {
       super.init(node: node)
 
-      var lightConfig = esp_matter.endpoint.extended_color_light.config_t()
-      lightConfig.on_off.on_off = true
-      lightConfig.level_control.current_level = .init(64)
-      lightConfig.level_control.lighting.start_up_current_level = .init(64)
-      lightConfig.color_control.color_mode =
-        chip.app.Clusters.ColorControl.ColorMode.colorTemperature.rawValue
-      lightConfig.color_control.enhanced_color_mode =
-        chip.app.Clusters.ColorControl.ColorMode.colorTemperature.rawValue
+      var onOffSwitchConfig = esp_matter.endpoint.on_off_switch.config_t()
 
-      let light = MatterExtendedColorLight(
-        node.innerNode, configuration: lightConfig)
-      self.id = Int(light.id)
-
-      var hsv = esp_matter.cluster.color_control.feature.hue_saturation
-        .config_t()
-      hsv.current_hue = 255
-      hsv.current_saturation = 255
-      light.colorControl.add(hsv)
+      let onOffSwitch = MatterOnOffSwitch(
+        node.innerNode, configuration: onOffSwitchConfig)
+      self.id = Int(onOffSwitch.id)
     }
   }
 }
@@ -189,19 +139,6 @@ extension Matter {
 func print(_ a: Matter.Endpoint.Attribute) {
   switch a {
   case .onOff: print("onOff")
-  case .levelControl: print("levelControl")
-  case .colorControl(let a):
-    print("colorControl(", terminator: "")
-    switch a {
-    case .currentHue: print("currentHue", terminator: "")
-    case .currentSaturation: print("currentSaturation", terminator: "")
-    case .currentX: print("currentX", terminator: "")
-    case .currentY: print("currentY", terminator: "")
-    case .colorTemperatureMireds:
-      print("colorTemperatureMireds", terminator: "")
-    case .colorMode: print("colorMode", terminator: "")
-    }
-    print(")")
   case .unknown: print("unknown")
   }
 }

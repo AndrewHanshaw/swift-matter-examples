@@ -126,32 +126,24 @@ struct Endpoint: MatterEndpoint {
   }
 }
 
-struct MatterExtendedColorLight: MatterConreteEndpoint {
+struct MatterOnOffSwitch: MatterConreteEndpoint {
   static var deviceTypeId: UInt32 {
-    esp_matter.endpoint.extended_color_light.get_device_type_id()
+    esp_matter.endpoint.on_off_switch.get_device_type_id()
   }
 
   var endpoint: UnsafeMutablePointer<esp_matter.endpoint_t>
 
   init(
     _ node: RootNode,
-    configuration: esp_matter.endpoint.extended_color_light.config_t
+    configuration: esp_matter.endpoint.on_off_switch.config_t
   ) {
     var config = configuration
-    endpoint = esp_matter.endpoint.extended_color_light.create(
+    endpoint = esp_matter.endpoint.on_off_switch.create(
       node.node, &config, 0x00, Unmanaged.passRetained(node.context).toOpaque())
   }
 
   init(_ endpoint: UnsafeMutablePointer<esp_matter.endpoint_t>) {
     self.endpoint = endpoint
-  }
-
-  var levelControl: LevelControl {
-    cluster(.levelControl)
-  }
-
-  var colorControl: ColorControl {
-    cluster(.colorControl)
   }
 
   var onOff: OnOff {

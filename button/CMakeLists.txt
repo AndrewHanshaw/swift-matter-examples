@@ -7,21 +7,12 @@ if(NOT DEFINED ENV{ESP_MATTER_PATH})
 endif(NOT DEFINED ENV{ESP_MATTER_PATH})
 
 if(NOT DEFINED ENV{ESP_MATTER_DEVICE_PATH})
-    if("${IDF_TARGET}" STREQUAL "esp32" OR "${IDF_TARGET}" STREQUAL "")
-        set(ENV{ESP_MATTER_DEVICE_PATH} $ENV{ESP_MATTER_PATH}/device_hal/device/esp32_devkit_c)
-    elseif("${IDF_TARGET}" STREQUAL "esp32c3")
-        set(ENV{ESP_MATTER_DEVICE_PATH} $ENV{ESP_MATTER_PATH}/device_hal/device/esp32c3_devkit_m)
-    elseif("${IDF_TARGET}" STREQUAL "esp32c2")
-        set(ENV{ESP_MATTER_DEVICE_PATH} $ENV{ESP_MATTER_PATH}/device_hal/device/esp32c2_devkit_m)
-    elseif("${IDF_TARGET}" STREQUAL "esp32h2")
-        set(ENV{ESP_MATTER_DEVICE_PATH} $ENV{ESP_MATTER_PATH}/device_hal/device/esp32h2_devkit_c)
-    elseif("${IDF_TARGET}" STREQUAL "esp32s3")
-        set(ENV{ESP_MATTER_DEVICE_PATH} $ENV{ESP_MATTER_PATH}/device_hal/device/esp32s3_devkit_c)
-    elseif("${IDF_TARGET}" STREQUAL "esp32c6")
-        set(ENV{ESP_MATTER_DEVICE_PATH} $ENV{ESP_MATTER_PATH}/device_hal/device/esp32c6_devkit_c)
-    else()
-        message(FATAL_ERROR "Unsupported IDF_TARGET")
-    endif()
+  if("${IDF_TARGET}" STREQUAL "esp32c6")
+    set(ENV{ESP_MATTER_DEVICE_PATH}
+        $ENV{ESP_MATTER_PATH}/device_hal/device/esp32c6_xiao)
+  else()
+    message(FATAL_ERROR "Unsupported IDF_TARGET")
+  endif()
 endif(NOT DEFINED ENV{ESP_MATTER_DEVICE_PATH})
 
 set(PROJECT_VER "1.0")
@@ -41,12 +32,12 @@ set(EXTRA_COMPONENT_DIRS
     "${ESP_MATTER_PATH}/device_hal/device"
     ${extra_components_dirs_append})
 
-project(light)
+project(button)
 
 # WARNING: This is just an example for using key for decrypting the encrypted OTA image
 # Please do not use it as is.
 if(CONFIG_ENABLE_ENCRYPTED_OTA)
-    target_add_binary_data(light.elf "esp_image_encryption_key.pem" TEXT)
+    target_add_binary_data(button.elf "esp_image_encryption_key.pem" TEXT)
 endif()
 
 if(CONFIG_IDF_TARGET_ESP32C2)
