@@ -43,7 +43,9 @@ extern "C" char *strdup(const char *s1);
 
 #include <esp_matter.h>
 #include <esp_matter_cluster.h>
+#include <esp_matter_core.h>
 #include <app-common/zap-generated/ids/Clusters.h>
+#include <app-common/zap-generated/ids/Commands.h>
 #include <app/server/Server.h>
 
 // Swift Matter interface

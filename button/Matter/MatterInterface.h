@@ -25,6 +25,32 @@ namespace esp_matter {
   namespace attribute {
     attribute_t *get_shim(cluster_t *cluster, unsigned int attribute_id);
   }
+
+  namespace lock {
+    status_t chip_stack_lock_shim(unsigned int ticks_to_wait);
+
+    esp_err_t chip_stack_unlock_shim();
+  }
+
+  namespace client {
+    esp_err_t cluster_update_shim(uint16_t local_endpoint_id, request_handle_t *req_handle);
+  }
+}
+
+namespace chip {
+  namespace app {
+    namespace Clusters {
+      namespace OnOff {
+        ClusterId Id_shim();
+
+        namespace Commands {
+          namespace Toggle {
+            CommandId Id_shim();
+          }
+        }
+      }
+    }
+  }
 }
 
 // Recomissioning causes failures with reference semantics so this is done as a function implemented in C++.

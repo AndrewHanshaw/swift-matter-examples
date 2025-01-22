@@ -140,6 +140,10 @@ struct MatterOnOffSwitch: MatterConreteEndpoint {
     var config = configuration
     endpoint = esp_matter.endpoint.on_off_switch.create(
       node.node, &config, 0x00, Unmanaged.passRetained(node.context).toOpaque())
+
+    var groups_config = esp_matter.cluster.groups.config_t()
+
+    esp_matter.cluster.groups.create(endpoint, &groups_config, 0xC0);
   }
 
   init(_ endpoint: UnsafeMutablePointer<esp_matter.endpoint_t>) {

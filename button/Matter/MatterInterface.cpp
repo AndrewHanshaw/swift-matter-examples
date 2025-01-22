@@ -23,6 +23,26 @@ esp_matter::attribute_t *esp_matter::attribute::get_shim(esp_matter::cluster_t *
   return get(cluster, (uint32_t)attribute_id);
 }
 
+chip::ClusterId chip::app::Clusters::OnOff::Id_shim() {
+  return Id;
+}
+
+chip::CommandId chip::app::Clusters::OnOff::Commands::Toggle::Id_shim() {
+  return Id;
+}
+
+esp_matter::lock::status_t esp_matter::lock::chip_stack_lock_shim(unsigned int ticks_to_wait) {
+  return chip_stack_lock((uint32_t)ticks_to_wait);
+}
+
+esp_err_t esp_matter::lock::chip_stack_unlock_shim() {
+  return chip_stack_unlock();
+}
+
+esp_err_t esp_matter::client::cluster_update_shim(uint16_t local_endpoint_id, esp_matter::client::request_handle_t *req_handle) {
+  return cluster_update(local_endpoint_id, req_handle);
+}
+
 void recomissionFabric() {
   if (chip::Server::GetInstance().GetFabricTable().FabricCount() == 0) {
     chip::CommissioningWindowManager & commissionMgr = chip::Server::GetInstance().GetCommissioningWindowManager();

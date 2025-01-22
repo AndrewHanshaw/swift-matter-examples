@@ -47,6 +47,7 @@ func main() {
   // Keep local variables alive. Workaround for issue #10
   // https://github.com/apple/swift-matter-examples/issues/10
   while true {
+    // onOffSwitch.enabled.toggle()
     sleep(1)
   }
 }
