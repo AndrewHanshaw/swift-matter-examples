@@ -23,12 +23,20 @@ esp_matter::attribute_t *esp_matter::attribute::get_shim(esp_matter::cluster_t *
   return get(cluster, (uint32_t)attribute_id);
 }
 
-chip::ClusterId chip::app::Clusters::OnOff::Id_shim() {
+chip::ClusterId chip::app::Clusters::Switch::Id_shim() {
   return Id;
 }
 
-chip::CommandId chip::app::Clusters::OnOff::Commands::Toggle::Id_shim() {
-  return Id;
+esp_err_t esp_matter::cluster::switch_cluster::feature::momentary_switch::add_shim(cluster_t *cluster) {
+  return add(cluster);
+}
+
+esp_err_t esp_matter::cluster::switch_cluster::feature::action_switch::add_shim(cluster_t *cluster) {
+  return add(cluster);
+}
+
+esp_err_t esp_matter::cluster::switch_cluster::feature::momentary_switch_multi_press::add_shim(cluster_t *cluster, config_t *config) {
+  return add(cluster, config);
 }
 
 esp_matter::lock::status_t esp_matter::lock::chip_stack_lock_shim(unsigned int ticks_to_wait) {

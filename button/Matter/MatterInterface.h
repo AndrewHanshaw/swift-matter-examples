@@ -20,6 +20,22 @@ namespace esp_matter {
 
   namespace cluster {
     cluster_t *get_shim(endpoint_t *endpoint, unsigned int cluster_id);
+
+    namespace switch_cluster {
+      namespace feature {
+        namespace momentary_switch {
+          esp_err_t add_shim(cluster_t *cluster);
+        }
+
+        namespace action_switch {
+          esp_err_t add_shim(cluster_t *cluster);
+        }
+
+        namespace momentary_switch_multi_press {
+          esp_err_t add_shim(cluster_t *cluster, config_t *config);
+        }
+      }
+    }
   }
 
   namespace attribute {
@@ -40,14 +56,8 @@ namespace esp_matter {
 namespace chip {
   namespace app {
     namespace Clusters {
-      namespace OnOff {
+      namespace Switch {
         ClusterId Id_shim();
-
-        namespace Commands {
-          namespace Toggle {
-            CommandId Id_shim();
-          }
-        }
       }
     }
   }

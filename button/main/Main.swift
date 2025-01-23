@@ -13,7 +13,7 @@
 func main() {
   print("Button running")
 
-  let onOffSwitch = OnOffSwitch()
+  let genericSwitch = GenericSwitch()
 
   // (1) Create a Matter root node
   let rootNode = Matter.Node()
@@ -21,23 +21,16 @@ func main() {
     print("identify")
   }
 
-  // (2) Create an "OnOffSwitch" endpoint
-  let onOffSwitchEndpoint = Matter.OnOffSwitch(node: rootNode)
-  onOffSwitchEndpoint.eventHandler = { event in
-    print("onOffSwitchEndpoint.eventHandler:")
+  // (2) Create an "GenericSwitch" endpoint
+  let genericSwitchEndpoint = Matter.GenericSwitch(node: rootNode)
+  genericSwitchEndpoint.eventHandler = { event in
+    print("genericSwitchEndpoint.eventHandler:")
     print(event.attribute)
     print(event.value)
-
-    switch event.attribute {
-    case .onOff:
-      onOffSwitch.enabled = (event.value == 1)
-    default:
-      break
-    }
   }
 
   // (3) Add the endpoint to the node
-  rootNode.addEndpoint(onOffSwitchEndpoint)
+  rootNode.addEndpoint(genericSwitchEndpoint)
 
   // (4) Provide the node to a Matter application and start it
   let app = Matter.Application()
@@ -47,7 +40,7 @@ func main() {
   // Keep local variables alive. Workaround for issue #10
   // https://github.com/apple/swift-matter-examples/issues/10
   while true {
-    // onOffSwitch.enabled.toggle()
+    // genericSwitch.enabled.toggle()
     sleep(1)
   }
 }

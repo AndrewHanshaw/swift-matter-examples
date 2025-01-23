@@ -75,9 +75,9 @@ extension Matter {
       case unknown(UInt32)
 
       init?(cluster: Cluster, attribute: UInt32) {
-        if let _ = cluster.as(OnOff.self) {
+        if let _ = cluster.as(SwitchCluster.self) {
           switch attribute {
-          case OnOff.AttributeID<OnOff.OnOffState>.state.rawValue: self = .onOff
+          case SwitchCluster.AttributeID<SwitchCluster.OnOffState>.state.rawValue: self = .onOff
           default: return nil
           }
         } else {
@@ -96,15 +96,24 @@ extension Matter {
 
 // Set up the endpoint. Endpoint parameters from esp-matter/components/esp_matter/esp_matter_endpoint.cpp
 extension Matter {
-  class OnOffSwitch: Endpoint {
+  class GenericSwitch: Endpoint {
     override init(node: Node) {
       super.init(node: node)
 
-      var onOffSwitchConfig = esp_matter.endpoint.on_off_switch.config_t()
+      var genericSwitchConfig = esp_matter.endpoint.generic_switch.config_t()
 
-      let onOffSwitch = MatterOnOffSwitch(
-        node.innerNode, configuration: onOffSwitchConfig)
-      self.id = Int(onOffSwitch.id)
+      let genericSwitch = MatterGenericSwitch(
+        node.innerNode, configuration: genericSwitchConfig)
+      self.id = Int(genericSwitch.id)
+
+      print("😀😀😀😀 endpoint ID: \(genericSwitch.endpoint)")
+      var cluster = esp_matter.cluster.get_shim(genericSwitch.endpoint, chip.app.Clusters.Switch.Id_shim())
+
+      esp_matter.cluster.switch_cluster.feature.momentary_switch.add(cluster)
+      esp_matter.cluster.switch_cluster.feature.action_switch.add(cluster)
+      var msm = esp_matter.cluster.switch_cluster.feature.momentary_switch_multi_press.config_t()
+      msm.multi_press_max = 5
+      esp_matter.cluster.switch_cluster.feature.momentary_switch_multi_press.add(cluster, &msm)
     }
   }
 }

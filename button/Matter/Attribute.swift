@@ -47,7 +47,7 @@ protocol MatterAttributeID: RawRepresentable where RawValue == UInt32 {
   associatedtype Attribute: MatterAttribute
 }
 
-extension OnOff {
+extension SwitchCluster {
   struct OnOffState: MatterAttribute {
     var attribute: UnsafeMutablePointer<esp_matter.attribute_t>
   }

@@ -10,7 +10,7 @@
 //===----------------------------------------------------------------------===//
 
 // Helper object that can be used to act as a smart switch.
-final class OnOffSwitch {
+final class GenericSwitch {
   var enabled: Bool = true {
     didSet {
       if enabled {
@@ -23,27 +23,6 @@ final class OnOffSwitch {
 
   let app_driver_button_down_cb: @convention(c) (UnsafeMutableRawPointer?, UnsafeMutableRawPointer?) -> Void = { arg1, arg2 in
       print("Button down ⬇️")
-
-      var req_handle = esp_matter.client.request_handle_t()
-      req_handle.type = esp_matter.client.INVOKE_CMD
-      req_handle.command_path.mClusterId = chip.app.Clusters.OnOff.Id_shim() // 0x00000006
-      req_handle.command_path.mCommandId = chip.app.Clusters.OnOff.Commands.Toggle.Id_shim() // 0x00000002
-
-      esp_matter.lock.chip_stack_lock_shim(portMAX_DELAY)
-      esp_matter.client.cluster_update(0, &req_handle);
-      esp_matter.lock.chip_stack_unlock_shim()
-
-      /*
-      // From the esp-matter sample light switch app (.cpp)
-      client::request_handle_t req_handle;
-      req_handle.type = esp_matter::client::INVOKE_CMD;
-      req_handle.command_path.mClusterId = OnOff::Id;
-      req_handle.command_path.mCommandId = OnOff::Commands::Toggle::Id;
-
-      lock::chip_stack_lock(portMAX_DELAY);
-      client::cluster_update(switch_endpoint_id, &req_handle);
-      lock::chip_stack_unlock();
-      */
   }
 
   let app_driver_button_up_cb: @convention(c) (UnsafeMutableRawPointer?, UnsafeMutableRawPointer?) -> Void = { arg1, arg2 in
