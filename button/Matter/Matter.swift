@@ -106,13 +106,15 @@ extension Matter {
         node.innerNode, configuration: genericSwitchConfig)
       self.id = Int(genericSwitch.id)
 
-      print("😀😀😀😀 endpoint ID: \(genericSwitch.endpoint)")
-      var cluster = esp_matter.cluster.get_shim(genericSwitch.endpoint, chip.app.Clusters.Switch.Id_shim())
+      var cluster: UnsafeMutablePointer<esp_matter.cluster_t>
+      cluster = esp_matter.cluster.get_shim(genericSwitch.endpoint, chip.app.Clusters.Switch.Id_shim())
 
+      print("Cluster ID \(cluster)")
+      print("Adding momentary switch feature to cluster")
       esp_matter.cluster.switch_cluster.feature.momentary_switch.add(cluster)
       esp_matter.cluster.switch_cluster.feature.action_switch.add(cluster)
       var msm = esp_matter.cluster.switch_cluster.feature.momentary_switch_multi_press.config_t()
-      msm.multi_press_max = 5
+      msm.multi_press_max = 2
       esp_matter.cluster.switch_cluster.feature.momentary_switch_multi_press.add(cluster, &msm)
     }
   }
@@ -140,7 +142,9 @@ extension Matter {
         default: break
         }
       }
-      esp_matter.start(callback, 0)
+      print("Calling esp_matter.start")
+      var err = esp_matter.start(callback, 0)
+      print("err: \(err)")
     }
   }
 }

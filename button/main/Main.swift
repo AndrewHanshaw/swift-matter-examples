@@ -22,6 +22,7 @@ func main() {
   }
 
   // (2) Create an "GenericSwitch" endpoint
+  print ("Creating GenericSwitch endpoint in Main.swift")
   let genericSwitchEndpoint = Matter.GenericSwitch(node: rootNode)
   genericSwitchEndpoint.eventHandler = { event in
     print("genericSwitchEndpoint.eventHandler:")

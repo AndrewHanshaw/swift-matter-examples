@@ -29,6 +29,22 @@ final class GenericSwitch {
       print("Button up ⬆️")
   }
 
+  let app_driver_button_single_click_cb: @convention(c) (UnsafeMutableRawPointer?, UnsafeMutableRawPointer?) -> Void = { arg1, arg2 in
+      print("Button single click")
+  }
+
+  let app_driver_button_double_click_cb: @convention(c) (UnsafeMutableRawPointer?, UnsafeMutableRawPointer?) -> Void = { arg1, arg2 in
+      print("Button double click")
+  }
+
+  let app_driver_button_long_press_start_cb: @convention(c) (UnsafeMutableRawPointer?, UnsafeMutableRawPointer?) -> Void = { arg1, arg2 in
+      print("Button long press start")
+  }
+
+  let app_driver_button_long_press_hold_cb: @convention(c) (UnsafeMutableRawPointer?, UnsafeMutableRawPointer?) -> Void = { arg1, arg2 in
+      print("Button long press hold")
+  }
+
   var handle: button_handle_t
 
   init() {
@@ -39,6 +55,10 @@ final class GenericSwitch {
     // Register callbacks for when the button is pressed, the callbacks are in this class
     iot_button_register_cb(handle, BUTTON_PRESS_DOWN, app_driver_button_down_cb, nil)
     iot_button_register_cb(handle, BUTTON_PRESS_UP, app_driver_button_up_cb, nil)
+    iot_button_register_cb(handle, BUTTON_SINGLE_CLICK, app_driver_button_single_click_cb, nil)
+    iot_button_register_cb(handle, BUTTON_DOUBLE_CLICK, app_driver_button_double_click_cb, nil)
+    iot_button_register_cb(handle, BUTTON_LONG_PRESS_START, app_driver_button_long_press_start_cb, nil)
+    iot_button_register_cb(handle, BUTTON_LONG_PRESS_HOLD, app_driver_button_long_press_hold_cb, nil)
     self.handle = handle
   }
 }
