@@ -81,7 +81,7 @@ enable_language(Swift)
 target_sources(${COMPONENT_LIB}
     PRIVATE
     Main.swift
-    GenericSwitch.swift
+    OnOffLight.swift
     ../Matter/Attribute.swift
     ../Matter/Clusters.swift
     ../Matter/Matter.swift

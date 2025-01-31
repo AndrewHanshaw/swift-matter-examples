@@ -60,6 +60,7 @@ struct RootNode: MatterNode {
     attribute: @escaping AttributeCallback, identify: @escaping IdentifyCallback
   ) {
     var nodeConfig = esp_matter.node.config_t()
+    print("Setting up callback for attribute!")
     esp_matter.attribute.set_callback_shim {
       type, endpoint, cluster, attribute, value, context in
       guard let context else {

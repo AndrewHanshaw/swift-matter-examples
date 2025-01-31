@@ -48,6 +48,7 @@ struct RootNode: MatterNode {
       attribute: @escaping AttributeCallback,
       identify: @escaping IdentifyCallback
     ) {
+      print("Initializing root node context")
       self.attribute = attribute
       self.identify = identify
     }
@@ -126,33 +127,29 @@ struct Endpoint: MatterEndpoint {
   }
 }
 
-struct MatterGenericSwitch: MatterConreteEndpoint {
+struct MatterOnOffLight: MatterConreteEndpoint {
   static var deviceTypeId: UInt32 {
-    esp_matter.endpoint.generic_switch.get_device_type_id()
+    esp_matter.endpoint.on_off_light.get_device_type_id()
   }
 
   var endpoint: UnsafeMutablePointer<esp_matter.endpoint_t>
 
   init(
     _ node: RootNode,
-    configuration: esp_matter.endpoint.generic_switch.config_t
+    configuration: esp_matter.endpoint.on_off_light.config_t
   ) {
     var config = configuration
 
-    print("Creating generic switch MatterConreteEndpoint")
-    endpoint = esp_matter.endpoint.generic_switch.create(
-      node.node, &config, 0x00, nil)
-
-    print("Creating descriptor")
-    var descriptor: UnsafeMutablePointer<esp_matter.cluster_t> = esp_matter.cluster.get_shim(endpoint, 0x0000001D); // TODO: shim Descriptor::Id
-    esp_matter.cluster.descriptor.feature.taglist.add(descriptor)
+    print("Creating on off light MatterConreteEndpoint")
+    endpoint = esp_matter.endpoint.on_off_light.create(
+      node.node, &config, 0x00, Unmanaged.passRetained(node.context).toOpaque())
   }
 
   init(_ endpoint: UnsafeMutablePointer<esp_matter.endpoint_t>) {
     self.endpoint = endpoint
   }
 
-  var onOff: SwitchCluster {
+  var onOff: OnOff {
     cluster(.onOff)
   }
 }

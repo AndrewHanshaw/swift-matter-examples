@@ -11,6 +11,10 @@
 
 #include "BridgingHeader.h"
 
+uint16_t esp_matter::endpoint::get_id_shim(esp_matter::endpoint_t* endpoint) {
+  return get_id(endpoint);
+}
+
 esp_err_t esp_matter::attribute::set_callback_shim(callback_t_shim callback) {
   return set_callback((callback_t)callback);
 }
@@ -23,8 +27,8 @@ esp_matter::attribute_t *esp_matter::attribute::get_shim(esp_matter::cluster_t *
   return get(cluster, (uint32_t)attribute_id);
 }
 
-chip::ClusterId chip::app::Clusters::Switch::Id_shim() {
-  return Id;
+esp_err_t esp_matter::attribute::update_shim(unsigned short endpoint_id, unsigned int cluster_id, unsigned int attribute_id, esp_matter_attr_val_t *val) {
+  return update(endpoint_id, cluster_id, attribute_id, val);
 }
 
 esp_err_t esp_matter::cluster::switch_cluster::feature::momentary_switch::add_shim(cluster_t *cluster) {

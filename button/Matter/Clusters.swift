@@ -33,7 +33,7 @@ struct ClusterID<Cluster: MatterCluster>: RawRepresentable {
   var rawValue: UInt32
 
   static var identify: ClusterID<Identify> { .init(rawValue: 0x0000_0003) }
-  static var onOff: ClusterID<SwitchCluster> { .init(rawValue: 0x0000_0006) }
+  static var onOff: ClusterID<OnOff> { .init(rawValue: 0x0000_0006) }
 }
 
 struct Cluster: MatterCluster {
@@ -72,7 +72,7 @@ struct Identify: MatterConcreteCluster {
   }
 }
 
-struct SwitchCluster: MatterConcreteCluster {
+struct OnOff: MatterConcreteCluster {
   static var clusterTypeId: ClusterID<Self> { .onOff }
   struct AttributeID<Attribute: MatterAttribute>: MatterAttributeID {
     var rawValue: UInt32

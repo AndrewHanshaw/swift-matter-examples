@@ -13,25 +13,33 @@
 func main() {
   print("Button running")
 
-  let genericSwitch = GenericSwitch()
-
   // (1) Create a Matter root node
   let rootNode = Matter.Node()
   rootNode.identifyHandler = {
     print("identify")
   }
 
-  // (2) Create an "GenericSwitch" endpoint
-  print ("Creating GenericSwitch endpoint in Main.swift")
-  let genericSwitchEndpoint = Matter.GenericSwitch(node: rootNode)
-  genericSwitchEndpoint.eventHandler = { event in
-    print("genericSwitchEndpoint.eventHandler:")
+  // (2) Create an "OnOffLight" endpoint
+  print ("Creating OnOffLight endpoint in Main.swift")
+  let onOffLightEndpoint = Matter.OnOffLight(node: rootNode)
+  onOffLightEndpoint.eventHandler = { event in
+    print("onOffLightEndpoint.eventHandler:")
     print(event.attribute)
     print(event.value)
+
+    switch event.attribute {
+    case .onOff:
+      print("onoff event!")
+
+    default:
+      break
+    }
   }
 
+  let onOffLight = OnOffLight(onOffLightEndpoint)
+
   // (3) Add the endpoint to the node
-  rootNode.addEndpoint(genericSwitchEndpoint)
+  rootNode.addEndpoint(onOffLightEndpoint)
 
   // (4) Provide the node to a Matter application and start it
   let app = Matter.Application()
@@ -41,7 +49,18 @@ func main() {
   // Keep local variables alive. Workaround for issue #10
   // https://github.com/apple/swift-matter-examples/issues/10
   while true {
-    // genericSwitch.enabled.toggle()
-    sleep(1)
+    // // onOffLight.enabled.toggle()
+    // let cluster = esp_matter.cluster.get_shim(onOffLightEndpoint.onOffLight.endpoint, ClusterID<OnOff>.onOff.rawValue)
+    // var attribute: UnsafeMutablePointer<esp_matter.attribute_t> = esp_matter.attribute.get_shim(cluster, OnOff.AttributeID<OnOff.OnOffState>.state.rawValue)
+    // var val: esp_matter_attr_val_t = esp_matter_invalid(nil)
+
+    // esp_matter.attribute.get_val(attribute, &val)
+    // print("val: \(val.val.b)")
+    // val.val.b = !val.val.b
+    // // esp_matter.attribute.update(UInt16(MatterOnOffLight.deviceTypeId), ClusterID<OnOff>.onOff.rawValue, OnOff.AttributeID<OnOff.OnOffState>.state.rawValue, &val)
+    // esp_matter.attribute.update_shim(UInt16(MatterOnOffLight.deviceTypeId), ClusterID<OnOff>.onOff.rawValue, OnOff.AttributeID<OnOff.OnOffState>.state.rawValue, &val)
+    // // esp_matter.attribute.update(UInt16(MatterOnOffLight.deviceTypeId), UInt32(ClusterID<OnOff>.onOff.rawValue))
+    // // esp_matter.attribute.set_val(attribute, &val)
+    sleep(10)
   }
 }

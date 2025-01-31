@@ -47,13 +47,19 @@ extension Matter {
       cluster: Cluster, attribute: UInt32,
       value: UnsafeMutablePointer<esp_matter_attr_val_t>?
     ) {
-      guard type == .didSet else { return }
+      guard type == .didSet else { 
+        print("failed guard in eventhandler")
+        return }
       guard let e = self.endpoints.first(where: { $0.id == endpoint.id }) else {
+        print("failed guard in eventhandler")
         return
       }
       let value: Int = Int(value?.pointee.val.u64 ?? 0)
       guard let a = Endpoint.Attribute(cluster: cluster, attribute: attribute)
-      else { return }
+      else { 
+        print("failed guard in eventhandler")
+        return }
+      print("setting up event handler")
       e.eventHandler?(Endpoint.Event(type: type, attribute: a, value: value))
     }
   }
@@ -75,9 +81,9 @@ extension Matter {
       case unknown(UInt32)
 
       init?(cluster: Cluster, attribute: UInt32) {
-        if let _ = cluster.as(SwitchCluster.self) {
+        if let _ = cluster.as(OnOff.self) {
           switch attribute {
-          case SwitchCluster.AttributeID<SwitchCluster.OnOffState>.state.rawValue: self = .onOff
+          case OnOff.AttributeID<OnOff.OnOffState>.state.rawValue: self = .onOff
           default: return nil
           }
         } else {
@@ -95,27 +101,33 @@ extension Matter {
 }
 
 // Set up the endpoint. Endpoint parameters from esp-matter/components/esp_matter/esp_matter_endpoint.cpp
+// extension Matter {
+//   class OnOffLight: Endpoint {
+//     override init(node: Node) {
+//       super.init(node: node)
+
+//       print("Setting up OnOffLight Endpoint")
+//       var onOffLightConfig = esp_matter.endpoint.on_off_light.config_t()
+
+//       let onOffLight = MatterOnOffLight(
+//         node.innerNode, configuration: onOffLightConfig)
+//       self.id = Int(onOffLight.id)
+//     }
+//   }
+// }
 extension Matter {
-  class GenericSwitch: Endpoint {
+  class OnOffLight: Endpoint {
+    var onOffLight: MatterOnOffLight
+
     override init(node: Node) {
+      print("Setting up OnOffLight Endpoint")
+      var onOffLightConfig = esp_matter.endpoint.on_off_light.config_t()
+
+      self.onOffLight = MatterOnOffLight(node.innerNode, configuration: onOffLightConfig)
+
       super.init(node: node)
 
-      var genericSwitchConfig = esp_matter.endpoint.generic_switch.config_t()
-
-      let genericSwitch = MatterGenericSwitch(
-        node.innerNode, configuration: genericSwitchConfig)
-      self.id = Int(genericSwitch.id)
-
-      var cluster: UnsafeMutablePointer<esp_matter.cluster_t>
-      cluster = esp_matter.cluster.get_shim(genericSwitch.endpoint, chip.app.Clusters.Switch.Id_shim())
-
-      print("Cluster ID \(cluster)")
-      print("Adding momentary switch feature to cluster")
-      esp_matter.cluster.switch_cluster.feature.momentary_switch.add(cluster)
-      esp_matter.cluster.switch_cluster.feature.action_switch.add(cluster)
-      var msm = esp_matter.cluster.switch_cluster.feature.momentary_switch_multi_press.config_t()
-      msm.multi_press_max = 2
-      esp_matter.cluster.switch_cluster.feature.momentary_switch_multi_press.add(cluster, &msm)
+      self.id = Int(onOffLight.id)
     }
   }
 }
