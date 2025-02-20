@@ -61,3 +61,5 @@ namespace esp_matter {
 // Recomissioning causes failures with reference semantics so this is done as a function implemented in C++.
 // Ideally this would be done by changing some of the headers in ESP Matter to have proper Swift annotations.
 void recomissionFabric();
+
+esp_err_t set_openthread_platform_config_shim();

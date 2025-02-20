@@ -25,6 +25,7 @@
 #include <button_gpio.h>
 #include <led_driver.h>
 #include <device.h>
+#include <esp_wifi.h>
 
 // ESP Matter
 // ==========
@@ -32,6 +33,26 @@
 #define CHIP_HAVE_CONFIG_H 1
 #define CHIP_USE_ENUM_CLASS_FOR_IM_ENUM 1
 #define CHIP_ADDRESS_RESOLVE_IMPL_INCLUDE_HEADER <lib/address_resolve/AddressResolve_DefaultImpl.h>
+// #define CONFIG_THREAD_NETWORK_ENDPOINT_ID 0
+// #define CONFIG_WIFI_NETWORK_ENDPOINT_ID 65534
+// #define CHIP_DEVICE_CONFIG_ENABLE_WIFI
+// #define CHIP_DEVICE_CONFIG_ENABLE_THREAD
+// #define CONFIG_ENABLE_MATTER_OVER_THREAD
+
+#define ESP_OPENTHREAD_DEFAULT_RADIO_CONFIG()
+    {
+        .radio_mode = RADIO_MODE_NATIVE,
+    }
+
+#define ESP_OPENTHREAD_DEFAULT_HOST_CONFIG()
+    {
+        .host_connection_mode = HOST_CONNECTION_MODE_NONE,
+    }
+
+#define ESP_OPENTHREAD_DEFAULT_PORT_CONFIG()
+    {
+        .storage_partition_name = "ot_storage", .netif_queue_size = 10, .task_queue_size = 10,
+    }
 
 // There seems to be assumption in FabricTable.h that strnlen is implicitly available via some other headers, but that
 // turns out to not be the case when importing these headers in Swift. Let's manually declare strnlen as a workaround.
@@ -47,6 +68,7 @@ extern "C" char *strdup(const char *s1);
 #include <app-common/zap-generated/ids/Clusters.h>
 #include <app-common/zap-generated/ids/Commands.h>
 #include <app/server/Server.h>
+#include <platform/ESP32/OpenthreadLauncher.h>
 
 // Swift Matter interface
 // ======================

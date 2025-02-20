@@ -41,6 +41,12 @@ func main() {
   // (3) Add the endpoint to the node
   rootNode.addEndpoint(onOffLightEndpoint)
 
+  /* Set OpenThread platform config */
+  set_openthread_platform_config_shim();
+
+  // Set wifi mode to power save
+  esp_wifi_set_ps(WIFI_PS_MIN_MODEM);
+
   // (4) Provide the node to a Matter application and start it
   let app = Matter.Application()
   app.rootNode = rootNode

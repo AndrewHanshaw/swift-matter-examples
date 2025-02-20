@@ -15,6 +15,16 @@ uint16_t esp_matter::endpoint::get_id_shim(esp_matter::endpoint_t* endpoint) {
   return get_id(endpoint);
 }
 
+esp_err_t set_openthread_platform_config_shim() {
+  esp_openthread_platform_config_t config = {
+      .radio_config = ESP_OPENTHREAD_DEFAULT_RADIO_CONFIG(),
+      .host_config = ESP_OPENTHREAD_DEFAULT_HOST_CONFIG(),
+      .port_config = ESP_OPENTHREAD_DEFAULT_PORT_CONFIG(),
+  };
+
+  return set_openthread_platform_config(&config);
+}
+
 esp_err_t esp_matter::attribute::set_callback_shim(callback_t_shim callback) {
   return set_callback((callback_t)callback);
 }
